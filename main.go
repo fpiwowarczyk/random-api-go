@@ -2,31 +2,39 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
-func getRandom(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("Request")
-	url := "https://www.random.org/integers/?num=3&min=0&max=3&col=1&base=10&format=plain"
-	response, err := http.Get(url)
-	if err != nil {
-		fmt.Print(err)
-	}
-	responseData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		fmt.Print(err)
+type randomResponse struct {
+	Stddev float64 `json:"stddev"`
+	Data   []int64 `json:"data"`
+}
 
+var tempResponse = []randomResponse{
+	{Stddev: 1, Data: []int64{1, 2, 3, 4}},
+	{Stddev: 1, Data: []int64{2, 3, 4, 5}},
+	{Stddev: 1, Data: []int64{1, 2, 2, 3, 3, 4, 4, 5}},
+}
+
+var tempReturnedData = []int{1, 2, 3, 4, 5}
+
+// get random respons with the deviation and values
+func getRandom(c *gin.Context) {
+	// Get data
+	var mean = 0
+	for i := 0; i < len(tempReturnedData); i++ {
+		mean += tempReturnedData[i]
 	}
-	fmt.Print(responseData)
+	mean = mean / len(tempResponse)
+	fmt.Print(mean)
+	c.IndentedJSON(http.StatusOK, tempResponse)
 }
 
 func main() {
-	router := mux.NewRouter().StrictSlash(false)
+	router := gin.Default()
+	router.GET("/random/", getRandom)
 
-	router.HandleFunc("/", getRandom)
-	log.Fatal(http.ListenAndServe(":8080", router))
+	router.Run("localhost:8080")
 }
