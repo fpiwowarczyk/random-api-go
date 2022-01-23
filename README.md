@@ -42,4 +42,4 @@ Code is mostly tested if you want to run all unit tests type
 go run -v ./...
 ```
 
-also there is running CI/CD with github actions where tests are runned always after pushing to main branch. 
+also there is running CI/CD runned with github actions where tests are runned always after pushing to main branch. 
