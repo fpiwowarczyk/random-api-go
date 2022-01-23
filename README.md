@@ -16,12 +16,11 @@ go run .
 You can build dockerfile by building file with project
 ```
 docker build ./random-api-go --tag random-api
-
 ```
 
 then you can run container with 
 ```
-docker run random-api
+docker run -d -p 8080:8080 random-api
 ```
 
 ## How to use
@@ -31,6 +30,16 @@ To call api you can use tools like postman or curl or use your browser by typing
 localhost:8080/random/mean?requests=1&length=5
 
 where:
-
 requests - concurrent requests to random.org api 
+
 length - number of numbers to get in every request
+
+## CI and Tests
+
+Code is mostly tested if you want to run all unit tests type 
+
+```
+go run -v ./...
+```
+
+also there is running CI/CD with github actions where tests are runned always after pushing to main branch. 
