@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/fpiwowarczyk/nobl9-go/random"
+	"github.com/fpiwowarczyk/random-api-go/random"
 )
 
 var PORT = "8080"
@@ -19,5 +19,4 @@ func setUpApi() {
 
 func main() {
 	setUpApi()
-
 }
