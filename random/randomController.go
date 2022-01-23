@@ -19,6 +19,7 @@ func GetRandomValues(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	numbers, err := GetNumbers(requests, length)
 	if err != nil {
@@ -27,7 +28,12 @@ func GetRandomValues(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := FormatResponses(numbers)
+	response, err := FormatResponses(numbers)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	json.NewEncoder(w).Encode(response)
 }

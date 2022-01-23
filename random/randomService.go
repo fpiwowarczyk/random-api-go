@@ -95,19 +95,35 @@ func GetNumbers(req int, len int) ([][]int, error) {
 	return allValues, nil
 }
 
-func FormatResponses(numbers [][]int) []RandomValuesResponse {
+func FormatResponses(numbers [][]int) ([]RandomValuesResponse, error) {
+	for _, value := range numbers {
+		if len(value) == 0 || value == nil || numbers == nil {
+			return nil, errors.New("No data present for formatting")
+		}
+	}
 	var response []RandomValuesResponse
 	var sumOfAllValues []int
 	for _, data := range numbers {
 		sumOfAllValues = append(sumOfAllValues, data...)
-		response = append(response, RandomValuesResponse{CountStandardDeviation(data), data})
+		stddev, err := CountStandardDeviation(data)
+		if err != nil {
+			return nil, err
+		}
+		response = append(response, RandomValuesResponse{stddev, data})
 	}
-	response = append(response, RandomValuesResponse{CountStandardDeviation(sumOfAllValues), sumOfAllValues})
+	stddev, err := CountStandardDeviation(sumOfAllValues)
+	if err != nil {
+		return nil, err
+	}
+	response = append(response, RandomValuesResponse{stddev, sumOfAllValues})
 
-	return response
+	return response, nil
 }
 
-func CountStandardDeviation(values []int) float64 {
+func CountStandardDeviation(values []int) (float64, error) {
+	if len(values) == 0 {
+		return 0.0, errors.New("Missing data for counting standard deviation")
+	}
 	mean := 0
 	for _, i := range values {
 		mean = mean + i
@@ -118,10 +134,13 @@ func CountStandardDeviation(values []int) float64 {
 	for _, i := range values {
 		squaredSums = squaredSums + math.Pow(float64(i-mean), 2)
 	}
-	return math.Sqrt(float64(toMultiply) * squaredSums)
+	return math.Sqrt(float64(toMultiply) * squaredSums), nil
 }
 
 func ConvertBytesToIntegers(bodyBytes []byte) ([]int, error) {
+	if len(bodyBytes) == 0 || bodyBytes == nil {
+		return nil, errors.New("Missing data for converting")
+	}
 	var values []int
 	valuesStr := strings.Split(string(bodyBytes), "\n")
 	for _, i := range valuesStr {
