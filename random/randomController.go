@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
 	"sync"
 )
 
-type RandomResponse struct {
+type RandomValuesResponse struct {
 	Stddev float64 `json:"stddev"`
 	Data   []int   `json:"data"`
 }
@@ -36,13 +37,29 @@ func GetRandomValues(w http.ResponseWriter, r *http.Request) {
 
 	randomValues := getNumbers(requests, length)
 
-	var responses []RandomResponse
-
+	var responses []RandomValuesResponse
+	var sumOfAllValues []int
 	for _, data := range randomValues {
-		responses = append(responses, RandomResponse{1.0, data})
+		sumOfAllValues = append(sumOfAllValues, data...)
+		responses = append(responses, RandomValuesResponse{CountStandardDeviation(data), data})
 	}
-	log.Println(responses)
+	responses = append(responses, RandomValuesResponse{CountStandardDeviation(sumOfAllValues), sumOfAllValues})
 	json.NewEncoder(w).Encode(responses)
+}
+
+func CountStandardDeviation(values []int) float64 {
+	mean := 0
+	for _, i := range values {
+		mean = mean + i
+	}
+	mean = mean / len(values)
+	toMultiply := 1.0 / (float64(len(values)) - 1.0)
+	squaredSums := 0.0
+	for _, i := range values {
+		squaredSums = squaredSums + math.Pow(float64(i-mean), 2)
+	}
+	log.Println(float64(toMultiply))
+	return math.Sqrt(float64(toMultiply) * squaredSums)
 }
 
 // Dont call it with more than 5 requests or youll get banned :(
