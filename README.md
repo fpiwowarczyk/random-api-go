@@ -27,7 +27,7 @@ docker run -d -p 8080:8080 random-api
 
 To call api you can use tools like postman or curl or use your browser by typing 
 
-localhost:8080/random/mean?requests=1&length=5
+`localhost:8080/random/mean?requests=1&length=5`
 
 where:
 requests - concurrent requests to random.org api 
@@ -36,10 +36,14 @@ length - number of numbers to get in every request
 
 ## CI and Tests
 
-Code is mostly tested if you want to run all unit tests type 
+Code is tested with about 70% of coverage to run tests use:
 
 ```
-go run -v ./...
+go test -v ./...
+
+# OR for coverage report 
+
+go test -coverprofile=coverage.out ./...
 ```
 
 also there is running CI/CD runned with github actions where tests are runned always after pushing to main branch. 
