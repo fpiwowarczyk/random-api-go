@@ -1,18 +1,24 @@
 package random
 
-// func TestFormatResponses_Success(t *testing.T) {
-// 	//given
-// 	testData := [][]int{{1, 2}}
-// 	expected := []RandomValuesResponse{{Stddev: 1, Data: []int{1, 2}}, {Stddev: 1, Data: []int{1, 2}}}
+import (
+	"testing"
 
-// 	//when
-// 	output, err := FormatResponses(testData)
+	"github.com/stretchr/testify/assert"
+)
 
-// 	//then
-// 	assert.Nil(t, err, "Shoudn't return any errors")
-// 	assert.NotNil(t, output, "Valid data should return data")
-// 	assert.Equal(t, expected, output, "Returned data should contain input with standard deviation and result for merged values")
-// }
+func TestFormatResponses_Success(t *testing.T) {
+	//given
+	testData := [][]int{{1, 2}}
+	expected := []RandomValuesResponse{{Stddev: 1, Data: []int{1, 2}}, {Stddev: 1, Data: []int{1, 2}}}
+
+	//when
+	output, err := FormatResponses(testData)
+
+	//then
+	assert.Nil(t, err, "Shoudn't return any errors")
+	assert.NotNil(t, output, "Valid data should return data")
+	assert.Equal(t, expected, output, "Returned data should contain input with standard deviation and result for merged values")
+}
 
 // func TestFormatResponses_Fail(t *testing.T) {
 // 	//given
