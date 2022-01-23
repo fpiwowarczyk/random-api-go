@@ -12,7 +12,7 @@ You can run program by using that commans in project home directory
 go run .
 ```
 
-OR 
+### Run with docker
 You can build dockerfile by building file with project
 ```
 docker build ./random-api-go --tag random-api
